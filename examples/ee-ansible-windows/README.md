@@ -1,4 +1,4 @@
-﻿# ee-ansible-windows
+# ee-ansible-windows
 
 Purpose-driven execution environment for Windows automation.
 

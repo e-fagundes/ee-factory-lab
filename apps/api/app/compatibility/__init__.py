@@ -1,1 +1,1 @@
-﻿"""Compatibility advisor."""
+"""Compatibility advisor."""

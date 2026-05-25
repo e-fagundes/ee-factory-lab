@@ -1,1 +1,1 @@
-﻿"""Core infrastructure."""
+"""Core infrastructure."""

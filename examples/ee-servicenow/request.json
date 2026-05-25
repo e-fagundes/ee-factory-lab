@@ -1,4 +1,4 @@
-﻿{
+{
   "ee_name": "ee-servicenow",
   "description": "Purpose-driven execution environment for ServiceNow ITSM automation.",
   "purpose": "Run ServiceNow ITSM workflows with a focused dependency set.",

@@ -1,4 +1,4 @@
-﻿from app.guardrails.validator import GuardrailValidator
+from app.guardrails.validator import GuardrailValidator
 from app.models.ee_request import AnsibleCollection, EERequestCreate, Severity
 
 

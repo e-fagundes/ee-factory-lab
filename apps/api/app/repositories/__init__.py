@@ -1,1 +1,1 @@
-﻿"""Persistence adapters."""
+"""Persistence adapters."""

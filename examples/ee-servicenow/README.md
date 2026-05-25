@@ -1,3 +1,3 @@
-﻿# ee-servicenow
+# ee-servicenow
 
 Purpose-driven ServiceNow ITSM automation EE.

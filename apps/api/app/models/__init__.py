@@ -1,1 +1,1 @@
-﻿"""Pydantic models."""
+"""Pydantic models."""

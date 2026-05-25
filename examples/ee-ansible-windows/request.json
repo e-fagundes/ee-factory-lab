@@ -1,4 +1,4 @@
-﻿{
+{
   "ee_name": "ee-ansible-windows",
   "description": "Purpose-driven execution environment for Windows automation.",
   "purpose": "Run Windows host automation using pinned Ansible Windows collections and pywinrm.",

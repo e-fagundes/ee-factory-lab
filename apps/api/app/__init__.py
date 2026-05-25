@@ -1,1 +1,1 @@
-﻿"""EE Factory Lab API."""
+"""EE Factory Lab API."""

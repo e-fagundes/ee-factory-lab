@@ -1,4 +1,4 @@
-﻿{
+{
   "ee_name": "ee-community-vmware",
   "description": "Purpose-driven execution environment for VMware automation.",
   "purpose": "Run VMware automation using community.vmware and pyvmomi.",

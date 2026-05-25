@@ -1,4 +1,4 @@
-﻿{
+{
   "ee_name": "ee-community-general",
   "description": "Small general-purpose Linux automation execution environment.",
   "purpose": "Run common Linux automation with a minimal collection set.",

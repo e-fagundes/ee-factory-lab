@@ -1,1 +1,1 @@
-﻿"""Supply-chain security services."""
+"""Supply-chain security services."""

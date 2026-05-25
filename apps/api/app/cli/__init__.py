@@ -1,1 +1,1 @@
-﻿"""Command line helpers."""
+"""Command line helpers."""

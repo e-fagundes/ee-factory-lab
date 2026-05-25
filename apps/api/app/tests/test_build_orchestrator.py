@@ -1,4 +1,4 @@
-﻿from app.builders.kubernetes_builder import KubernetesBuildOrchestrator
+from app.builders.kubernetes_builder import KubernetesBuildOrchestrator
 from app.models.ee_request import AnsibleCollection, BuildMode, EERequestRecord
 
 

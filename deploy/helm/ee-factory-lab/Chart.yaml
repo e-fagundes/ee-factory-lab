@@ -1,4 +1,4 @@
-﻿apiVersion: v2
+apiVersion: v2
 name: ee-factory-lab
 description: IDP-style Ansible Execution Environment factory lab
 type: application

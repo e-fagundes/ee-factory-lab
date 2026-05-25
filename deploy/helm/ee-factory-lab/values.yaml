@@ -1,4 +1,4 @@
-﻿api:
+api:
   image: ee-factory-lab/api:local
 portal:
   image: ee-factory-lab/portal:local

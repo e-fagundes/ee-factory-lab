@@ -1,4 +1,4 @@
-﻿from app.compatibility.advisor import CompatibilityAdvisor
+from app.compatibility.advisor import CompatibilityAdvisor
 from app.models.ee_request import AnsibleCollection, EERequestRecord
 from app.services.generator import EEFileGenerator
 

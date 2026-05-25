@@ -1,1 +1,1 @@
-﻿"""Builder worker package."""
+"""Builder worker package."""
