@@ -3,6 +3,9 @@ param(
     [string]$Namespace = "ee-factory-lab",
     [string]$Profile = "minikube",
     [switch]$SkipImageBuild,
+    [switch]$EnableOllama,
+    [string]$OllamaBaseUrl = "http://host.minikube.internal:11434",
+    [string]$OllamaModel = "llama3.2:1b",
     [string]$PostgresPassword
 )
 
@@ -57,6 +60,20 @@ if (-not $SkipImageBuild) {
 }
 
 kubectl apply -k deploy/minikube
+
+if ($EnableOllama) {
+    Write-Host "Enabling Ollama advisory integration in the API deployment..."
+    kubectl -n $Namespace patch configmap ee-factory-config --type merge -p (
+        @{
+            data = @{
+                OLLAMA_ENABLED = "true"
+                OLLAMA_BASE_URL = $OllamaBaseUrl
+                OLLAMA_MODEL = $OllamaModel
+            }
+        } | ConvertTo-Json -Compress
+    )
+    kubectl -n $Namespace rollout restart deployment/ee-factory-api
+}
 
 kubectl -n $Namespace rollout status deployment/postgres --timeout=180s
 kubectl -n $Namespace rollout status deployment/ee-factory-api --timeout=180s

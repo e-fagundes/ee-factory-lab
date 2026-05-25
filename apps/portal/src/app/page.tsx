@@ -98,6 +98,13 @@ type SettingsResponse = {
   vulnerability_scan_required: boolean;
   ollama_enabled: boolean;
   ollama_model: string;
+  ollama_status?: {
+    enabled: boolean;
+    available: boolean;
+    model: string;
+    message: string;
+    models?: string[];
+  };
 };
 
 type LogResponse = {
@@ -159,6 +166,7 @@ export default function Home() {
   const [selectedFileName, setSelectedFileName] = useState("execution-environment.yml");
   const [compatibilityMarkdown, setCompatibilityMarkdown] = useState("");
   const [vulnerabilityMarkdown, setVulnerabilityMarkdown] = useState("");
+  const [llmAdvisoryMarkdown, setLlmAdvisoryMarkdown] = useState("");
   const [logs, setLogs] = useState<LogResponse | null>(null);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
@@ -293,6 +301,7 @@ export default function Home() {
     setGeneratedFiles([]);
     setCompatibilityMarkdown("");
     setVulnerabilityMarkdown("");
+    setLlmAdvisoryMarkdown("");
     setLogs(null);
     setError("");
     setNotice("Ready for a new EE request.");
@@ -346,6 +355,7 @@ export default function Home() {
       );
       const refreshed = await apiFetch<EERequestRecord>(`/api/v1/ee-requests/${selectedRequest.id}`);
       setGeneratedFiles(generated.files);
+      setLlmAdvisoryMarkdown(getGeneratedFileContent(generated.files, "llm-advisory.md"));
       setSelectedFileName(generated.files[0]?.name ?? "execution-environment.yml");
       setCompatibilityMarkdown(report.markdown);
       setVulnerabilityMarkdown(vulnerabilityReport.markdown);
@@ -361,6 +371,7 @@ export default function Home() {
     setGeneratedFiles([]);
     setCompatibilityMarkdown("");
     setVulnerabilityMarkdown("");
+    setLlmAdvisoryMarkdown("");
     setLogs(null);
     await runAction("Opening request", async () => {
       const refreshed = await apiFetch<EERequestRecord>(`/api/v1/ee-requests/${request.id}`);
@@ -377,6 +388,7 @@ export default function Home() {
         apiFetch<LogResponse>(`/api/v1/ee-requests/${request.id}/logs`)
       ]);
       setGeneratedFiles(generated.files);
+      setLlmAdvisoryMarkdown(getGeneratedFileContent(generated.files, "llm-advisory.md"));
       setSelectedFileName(generated.files[0]?.name ?? "execution-environment.yml");
       setCompatibilityMarkdown(report.markdown);
       setVulnerabilityMarkdown(vulnerabilityReport.markdown);
@@ -405,6 +417,7 @@ export default function Home() {
       });
       const refreshed = await apiFetch<EERequestRecord>(`/api/v1/ee-requests/${selectedRequest.id}`);
       setVulnerabilityMarkdown(report.markdown);
+      setLlmAdvisoryMarkdown("");
       setSelectedRequest(refreshed);
       setActiveSection("files");
       setNotice("OSV.dev vulnerability scan completed.");
@@ -523,6 +536,7 @@ export default function Home() {
       setGeneratedFiles([]);
       setCompatibilityMarkdown("");
       setVulnerabilityMarkdown("");
+      setLlmAdvisoryMarkdown("");
       setActiveSection("create");
       setNotice(`Created new tagged request ${created.ee_name}:${created.image_tag}.`);
       await refreshRequests();
@@ -543,6 +557,24 @@ export default function Home() {
       });
       setSelectedFileName("generated-readme.md");
       setNotice("Generated README refreshed.");
+    });
+  }
+
+  async function generateLlmAdvisory() {
+    if (!selectedRequest) {
+      return;
+    }
+    await runAction("Generating Llama guidance", async () => {
+      const response = await apiFetch<{ content: string }>(`/api/v1/ee-requests/${selectedRequest.id}/llm-advisory`, {
+        method: "POST"
+      });
+      setLlmAdvisoryMarkdown(response.content);
+      setGeneratedFiles((files) => {
+        const remaining = files.filter((file) => file.name !== "llm-advisory.md");
+        return [...remaining, { name: "llm-advisory.md", content: response.content }];
+      });
+      setSelectedFileName("llm-advisory.md");
+      setNotice("Llama advisory notes generated. Guardrails and approval gates remain authoritative.");
     });
   }
 
@@ -930,6 +962,17 @@ export default function Home() {
                   </details>
                 )}
               </div>
+              <div className="llm-assist-block">
+                <PanelHeader
+                  title="Llama review assistant"
+                  subtitle="Plain-language guidance only. Guardrails and approval gates still make the decisions."
+                />
+                {llmAdvisoryMarkdown ? (
+                  <pre className="report-preview assistant-preview">{llmAdvisoryMarkdown}</pre>
+                ) : (
+                  <EmptyState text="Generate advisory notes after validation or file generation to help reviewers understand scope, risk, and next questions." />
+                )}
+              </div>
               <div className="button-row">
                 <button
                   className="primary-button"
@@ -957,6 +1000,15 @@ export default function Home() {
                 >
                   <ShieldCheck size={16} />
                   Security scan
+                </button>
+                <button
+                  className="secondary-button"
+                  disabled={!selectedRequest || Boolean(busyAction)}
+                  onClick={() => void generateLlmAdvisory()}
+                  type="button"
+                >
+                  <FileCode2 size={16} />
+                  Llama guidance
                 </button>
                 <button
                   className="secondary-button"
@@ -1128,7 +1180,10 @@ export default function Home() {
               </div>
               <div>
                 <dt>Ollama documentation assistant</dt>
-                <dd>{settings?.ollama_enabled ? `Enabled (${settings.ollama_model})` : "Disabled"}</dd>
+                <dd>
+                  {settings?.ollama_enabled ? `Enabled (${settings.ollama_model})` : "Disabled"}
+                  {settings?.ollama_status?.message ? ` - ${settings.ollama_status.message}` : ""}
+                </dd>
               </div>
               <div>
                 <dt>OSV vulnerability checks</dt>
@@ -1187,6 +1242,10 @@ function normalizePayload(form: EERequestPayload): EERequestPayload {
 
 function buildImageRef(form: EERequestPayload) {
   return `${form.publish_target}/${form.registry_namespace}/${form.ee_name}:${form.image_tag}`;
+}
+
+function getGeneratedFileContent(files: GeneratedFile[], name: string) {
+  return files.find((file) => file.name === name)?.content ?? "";
 }
 
 function getNextAction(

@@ -6,6 +6,8 @@ metadata:
 data:
   DEFAULT_PUBLISH_TARGET: quay.io
   OLLAMA_ENABLED: "false"
+  OLLAMA_BASE_URL: http://host.minikube.internal:11434
+  OLLAMA_MODEL: llama3.2:1b
   VULNERABILITY_SCAN_ENABLED: "true"
   VULNERABILITY_SCAN_REQUIRED: "false"
   OSV_API_BASE_URL: https://api.osv.dev

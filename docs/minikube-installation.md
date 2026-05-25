@@ -61,6 +61,15 @@ $env:QUAY_PASSWORD = Read-Host "Quay token"
 kubectl -n ee-factory-lab get pods,svc,pvc
 ```
 
+To enable the local Llama/Ollama review assistant for README and advisory text:
+
+```powershell
+ollama pull llama3.2:1b
+.\scripts\deploy-minikube.ps1 -EnableOllama
+```
+
+The LLM is advisory only. It can explain findings and suggest reviewer questions, but deterministic guardrails and approval gates remain authoritative.
+
 ## Port Forward
 
 ```powershell

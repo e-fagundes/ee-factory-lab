@@ -196,5 +196,9 @@ class EERequestService:
         record = self.get(request_id)
         return self.documentation.generate(record)
 
+    def generate_llm_advisory(self, request_id: str) -> str:
+        record = self.get(request_id)
+        return self.documentation.advisory(record)
+
     def _has_blockers(self, findings: list[Finding]) -> bool:
         return any(finding.severity == Severity.blocker for finding in findings)

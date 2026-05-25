@@ -281,8 +281,15 @@ Configuration:
 
 ```env
 OLLAMA_ENABLED=false
-OLLAMA_BASE_URL=http://host.docker.internal:11434
-OLLAMA_MODEL=llama3.1
+OLLAMA_BASE_URL=http://host.minikube.internal:11434
+OLLAMA_MODEL=llama3.2:1b
+```
+
+For the local lab path:
+
+```powershell
+ollama pull llama3.2:1b
+.\scripts\deploy-minikube.ps1 -EnableOllama
 ```
 
 ## GitHub Actions

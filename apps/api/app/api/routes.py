@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 
 from app.core.config import get_settings
 from app.core.config_loader import load_yaml
+from app.llm.ollama_client import OllamaClient
 from app.models.ee_request import BuildRequest, EERequestCreate, EERequestRecord, GeneratedFile, GeneratedFilesResponse, NewVersionRequest
 from app.services.request_service import EERequestService
 
@@ -22,6 +23,7 @@ def settings() -> dict[str, object]:
         "vulnerability_scan_required": current.vulnerability_scan_required,
         "ollama_enabled": current.ollama_enabled,
         "ollama_model": current.ollama_model,
+        "ollama_status": OllamaClient().status(),
     }
 
 
@@ -142,4 +144,10 @@ def publish(request_id: str) -> dict[str, object]:
 @router.post("/ee-requests/{request_id}/generate-docs")
 def generate_docs(request_id: str) -> dict[str, str]:
     content = service().generate_docs(request_id)
+    return {"request_id": request_id, "status": "GENERATED", "content": content}
+
+
+@router.post("/ee-requests/{request_id}/llm-advisory")
+def generate_llm_advisory(request_id: str) -> dict[str, str]:
+    content = service().generate_llm_advisory(request_id)
     return {"request_id": request_id, "status": "GENERATED", "content": content}

@@ -64,6 +64,21 @@ spec:
                 configMapKeyRef:
                   name: ee-factory-config
                   key: OSV_API_BASE_URL
+            - name: OLLAMA_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: ee-factory-config
+                  key: OLLAMA_ENABLED
+            - name: OLLAMA_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ee-factory-config
+                  key: OLLAMA_BASE_URL
+            - name: OLLAMA_MODEL
+              valueFrom:
+                configMapKeyRef:
+                  name: ee-factory-config
+                  key: OLLAMA_MODEL
           volumeMounts:
             - name: data
               mountPath: /data

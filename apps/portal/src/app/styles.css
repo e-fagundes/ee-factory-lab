@@ -516,6 +516,18 @@ select:focus {
   padding-top: 16px;
 }
 
+.llm-assist-block {
+  border-top: 1px solid #e8edf4;
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.assistant-preview {
+  max-height: 360px;
+  background: #10231f;
+  color: #e9fff7;
+}
+
 .file-tabs {
   display: flex;
   flex-wrap: wrap;
