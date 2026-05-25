@@ -1,0 +1,6 @@
+allowed_base_images:
+  - quay.io/rockylinux/rockylinux:9
+  - quay.io/centos/centos:stream9
+  - registry.fedoraproject.org/fedora:43
+  - registry.fedoraproject.org/fedora:44
+  - docker.io/redhat/ubi9:latest

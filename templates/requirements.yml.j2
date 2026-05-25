@@ -1,0 +1,8 @@
+﻿---
+collections:
+{% for collection in request.collections %}
+  - name: {{ collection.name }}
+{% if collection.version %}
+    version: "{{ collection.version }}"
+{% endif %}
+{% endfor %}

@@ -1,0 +1,24 @@
+﻿{
+  "ee_name": "ee-community-general",
+  "description": "Small general-purpose Linux automation execution environment.",
+  "purpose": "Run common Linux automation with a minimal collection set.",
+  "automation_domain": "general",
+  "base_image": "quay.io/rockylinux/rockylinux:9",
+  "ansible_core_version": "2.15.13",
+  "ansible_runner_version": "2.4.0",
+  "collections": [
+    {
+      "name": "ansible.posix",
+      "version": "1.5.4"
+    },
+    {
+      "name": "community.general",
+      "version": "9.5.0"
+    }
+  ],
+  "python_dependencies": [],
+  "system_dependencies": [],
+  "image_tag": "0.1.0",
+  "registry_namespace": "example-platform",
+  "publish_target": "quay.io"
+}

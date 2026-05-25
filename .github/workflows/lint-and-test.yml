@@ -1,0 +1,39 @@
+name: lint-and-test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r apps/api/requirements.txt
+      - run: python -m ruff check apps/api/app
+      - run: cd apps/api && python -m pytest
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: cd apps/portal && npm ci
+      - run: cd apps/portal && npm run lint
+      - run: cd apps/portal && npm run build
+      - run: cd apps/portal && npm audit --audit-level=moderate
+
+  security-basics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: High-confidence secret scan
+        run: |
+          set -euo pipefail
+          ! git grep -n -I -E 'gho_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]+|QUAY_PASSWORD=\S+|QUAY_TOKEN=\S+|BEGIN (RSA|OPENSSH|PRIVATE) KEY|xox[baprs]-|AKIA[0-9A-Z]{16}' -- ':!.github/workflows/lint-and-test.yml'
+          ! git grep -n -I -E 'quay\.io/.+:.+@|docker login .+--password' -- ':!.github/workflows/lint-and-test.yml'

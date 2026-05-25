@@ -1,0 +1,12 @@
+EE Factory Lab
+
+This chart skeleton is included for teams that prefer Helm packaging over the
+raw Minikube manifests. The documented local lab path uses deploy/minikube
+because it keeps the platform wiring explicit for learning, review, and
+portfolio demonstration.
+
+Recommended local path:
+
+  ./scripts/setup-minikube.ps1
+  ./scripts/deploy-minikube.ps1
+  ./scripts/port-forward.ps1 -StopExisting

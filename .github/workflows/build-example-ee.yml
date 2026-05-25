@@ -1,0 +1,81 @@
+name: build-example-ee
+
+on:
+  workflow_dispatch:
+    inputs:
+      ee:
+        description: Example EE name
+        default: ee-ansible-windows
+        required: true
+      tag:
+        description: Image tag to build
+        default: gha-test
+        required: true
+      registry_namespace:
+        description: Quay namespace or organization
+        default: example-platform
+        required: true
+      push:
+        description: Push image when registry secrets are configured
+        default: "false"
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install ansible-builder
+      - name: Validate selected example
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ inputs.ee }}" in
+            ee-community-general|ee-ansible-windows|ee-community-vmware|ee-servicenow) ;;
+            *)
+              echo "Unsupported example: ${{ inputs.ee }}"
+              exit 1
+              ;;
+          esac
+          test -f "examples/${{ inputs.ee }}/execution-environment.yml"
+      - name: Create build context
+        run: |
+          ansible-builder create \
+            --file examples/${{ inputs.ee }}/execution-environment.yml \
+            --context examples/${{ inputs.ee }}/context \
+            --output-filename Containerfile
+      - name: Resolve image reference
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ inputs.push }}" = "true" ]; then
+            echo "IMAGE_REF=quay.io/${{ inputs.registry_namespace }}/${{ inputs.ee }}:${{ inputs.tag }}" >> "$GITHUB_ENV"
+          else
+            echo "IMAGE_REF=local/${{ inputs.ee }}:${{ inputs.tag }}" >> "$GITHUB_ENV"
+          fi
+      - name: Validate registry secrets when push is requested
+        if: ${{ inputs.push == 'true' }}
+        env:
+          QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
+          QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+        run: |
+          if [ -z "$QUAY_USERNAME" ] || [ -z "$QUAY_PASSWORD" ]; then
+            echo "QUAY_USERNAME and QUAY_PASSWORD secrets are required for push=true."
+            exit 1
+          fi
+      - uses: docker/login-action@v3
+        if: ${{ inputs.push == 'true' }}
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_PASSWORD }}
+      - name: Build image
+        run: docker build -f examples/${{ inputs.ee }}/context/Containerfile -t "$IMAGE_REF" examples/${{ inputs.ee }}/context
+      - name: Push image
+        if: ${{ inputs.push == 'true' }}
+        run: docker push "$IMAGE_REF"

@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ee-builder-template
+  namespace: ee-factory-lab
+  labels:
+    app: ee-builder
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccountName: ee-factory-api
+      securityContext:
+        fsGroup: 10001
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: builder
+          image: ee-factory-lab/builder:local
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+            runAsUser: 0
+            runAsGroup: 0
+            allowPrivilegeEscalation: true
+          env:
+            - name: EE_REQUEST_ID
+              value: replace-at-runtime
+            - name: DATA_DIR
+              value: /data
+            - name: BUILD_MODE
+              value: build_only
+            - name: IMAGE_REF
+              value: replace-at-runtime
+            - name: PUSH_IMAGE
+              value: "false"
+          volumeMounts:
+            - name: ee-factory-data
+              mountPath: /data
+            - name: registry-auth
+              mountPath: /workspace/.docker
+              readOnly: true
+      volumes:
+        - name: ee-factory-data
+          persistentVolumeClaim:
+            claimName: ee-factory-data
+        - name: registry-auth
+          secret:
+            secretName: quay-docker-config
+            optional: true
+            items:
+              - key: .dockerconfigjson
+                path: config.json

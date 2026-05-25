@@ -1,0 +1,26 @@
+name_pattern: "^[a-z0-9][a-z0-9-]{2,62}$"
+image_tag_pattern: "^[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}$"
+max_domains_without_warning: 1
+max_collections_without_warning: 4
+system_dependency_pattern: "^[A-Za-z0-9_+.-]+(\\s*\\[[A-Za-z0-9_:,! -]+\\])?$"
+allowed_system_dependencies:
+  - gcc
+  - make
+  - krb5-devel
+  - openssl-devel
+  - postgresql
+  - postgresql-devel
+  - python3-devel
+  - python3-libselinux
+  - sshpass
+warn_system_dependencies:
+  - gcc
+  - make
+  - openssl-devel
+blocked_secret_patterns:
+  - password
+  - passwd
+  - secret
+  - token
+  - apikey
+  - api_key

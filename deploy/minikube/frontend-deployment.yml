@@ -1,0 +1,21 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ee-factory-portal
+  namespace: ee-factory-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ee-factory-portal
+  template:
+    metadata:
+      labels:
+        app: ee-factory-portal
+    spec:
+      containers:
+        - name: portal
+          image: ee-factory-lab/portal:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000

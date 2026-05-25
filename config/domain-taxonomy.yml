@@ -1,0 +1,48 @@
+domains:
+  general:
+    description: General Linux and common automation utilities.
+  windows:
+    description: Windows host automation.
+  vmware:
+    description: VMware infrastructure automation.
+  servicenow:
+    description: ServiceNow ITSM and platform automation.
+  kubernetes:
+    description: Kubernetes and OpenShift resource automation.
+  cloud-aws:
+    description: Amazon Web Services automation.
+  cloud-azure:
+    description: Microsoft Azure automation.
+  cloud-gcp:
+    description: Google Cloud automation.
+  network:
+    description: Network device automation.
+  security:
+    description: Security automation.
+  observability:
+    description: Monitoring and observability automation.
+  database:
+    description: Database administration and platform data service automation.
+  aap-config-as-code:
+    description: Red Hat Ansible Automation Platform configuration as code automation.
+
+collection_domains:
+  ansible.windows: windows
+  community.windows: windows
+  community.vmware: vmware
+  vmware.vmware_rest: vmware
+  servicenow.itsm: servicenow
+  kubernetes.core: kubernetes
+  amazon.aws: cloud-aws
+  azure.azcollection: cloud-azure
+  google.cloud: cloud-gcp
+  cisco.ios: network
+  ansible.netcommon: network
+  ansible.posix: general
+  community.general: general
+  community.postgresql: database
+  infra.aap_configuration: aap-config-as-code
+  ansible.platform: aap-config-as-code
+  ansible.controller: aap-config-as-code
+  ansible.hub: aap-config-as-code
+  ansible.eda: aap-config-as-code

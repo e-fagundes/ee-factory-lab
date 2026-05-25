@@ -1,0 +1,22 @@
+﻿{
+  "ee_name": "ee-community-vmware",
+  "description": "Purpose-driven execution environment for VMware automation.",
+  "purpose": "Run VMware automation using community.vmware and pyvmomi.",
+  "automation_domain": "vmware",
+  "base_image": "quay.io/rockylinux/rockylinux:9",
+  "ansible_core_version": "2.15.13",
+  "ansible_runner_version": "2.4.0",
+  "collections": [
+    {
+      "name": "community.vmware",
+      "version": "5.7.2"
+    }
+  ],
+  "python_dependencies": [
+    "pyvmomi==8.0.3.0.1"
+  ],
+  "system_dependencies": [],
+  "image_tag": "0.1.0",
+  "registry_namespace": "example-platform",
+  "publish_target": "quay.io"
+}

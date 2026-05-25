@@ -1,0 +1,10 @@
+resources:
+  - namespace.yml
+  - postgres-pvc.yml
+  - data-pvc.yml
+  - postgres-deployment.yml
+  - frontend-deployment.yml
+  - backend-deployment.yml
+  - services.yml
+  - configmaps.yml
+  - rbac.yml

@@ -1,0 +1,48 @@
+---
+version: 3
+
+images:
+  base_image:
+    name: {{ request.base_image | tojson }}
+
+dependencies:
+  ansible_core:
+    package_pip: ansible-core=={{ request.ansible_core_version }}
+  ansible_runner:
+    package_pip: ansible-runner=={{ request.ansible_runner_version }}
+  galaxy: requirements.yml
+{% if request.python_dependencies %}
+  python: requirements.txt
+{% endif %}
+{% if request.system_dependencies %}
+  system: bindep.txt
+{% endif %}
+{% if request.dependencies_exclude.python or request.dependencies_exclude.system %}
+  exclude:
+{% if request.dependencies_exclude.python %}
+    python:
+{% for dependency in request.dependencies_exclude.python %}
+      - {{ dependency | tojson }}
+{% endfor %}
+{% endif %}
+{% if request.dependencies_exclude.system %}
+    system:
+{% for dependency in request.dependencies_exclude.system %}
+      - {{ dependency | tojson }}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+options:
+  tags:
+    - {{ request.image_tag | tojson }}
+
+{% if request.additional_build_steps %}
+additional_build_steps:
+{% for step_name, commands in request.additional_build_steps.items() %}
+  {{ step_name }}:
+{% for command in commands %}
+    - {{ command | tojson }}
+{% endfor %}
+{% endfor %}
+{% endif %}

@@ -1,0 +1,15 @@
+.git
+.github
+data
+docs
+deploy
+examples
+node_modules
+.next
+apps/portal/.next
+apps/portal/node_modules
+apps/api/.venv
+apps/api/app/tests
+__pycache__
+*.pyc
+*.log

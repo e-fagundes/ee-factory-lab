@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ee-factory-api
+  namespace: ee-factory-lab
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ee-factory-api
+  namespace: ee-factory-lab
+rules:
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["create", "get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["quay-docker-config"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ee-factory-api
+  namespace: ee-factory-lab
+subjects:
+  - kind: ServiceAccount
+    name: ee-factory-api
+roleRef:
+  kind: Role
+  name: ee-factory-api
+  apiGroup: rbac.authorization.k8s.io

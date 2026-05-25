@@ -1,0 +1,20 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: development
+      DATABASE_URL: sqlite:///./data/metadata/ee_factory_lab.db
+      DATA_DIR: /workspace/data
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace/apps/api
+  portal:
+    build: ./apps/portal
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000

@@ -1,0 +1,30 @@
+name: validate-examples
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r apps/api/requirements.txt
+      - run: python -m pip install ansible-builder ansible-core
+      - run: PYTHONPATH=apps/api python -m app.cli.validate_examples
+      - run: PYTHONPATH=apps/api python -m app.cli.scan_examples
+      - name: Run ansible-builder create for all examples
+        shell: bash
+        run: |
+          set -euo pipefail
+          for example in examples/*; do
+            [ -d "$example" ] || continue
+            echo "Validating $example"
+            ansible-builder create \
+              --file "$example/execution-environment.yml" \
+              --context "$example/context" \
+              --output-filename Containerfile
+          done

@@ -1,0 +1,35 @@
+﻿apiVersion: v1
+kind: Service
+metadata:
+  name: ee-factory-api
+  namespace: ee-factory-lab
+spec:
+  selector:
+    app: ee-factory-api
+  ports:
+    - port: 8000
+      targetPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ee-factory-portal
+  namespace: ee-factory-lab
+spec:
+  selector:
+    app: ee-factory-portal
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: ee-factory-lab
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432

@@ -1,0 +1,22 @@
+﻿{
+  "ee_name": "ee-servicenow",
+  "description": "Purpose-driven execution environment for ServiceNow ITSM automation.",
+  "purpose": "Run ServiceNow ITSM workflows with a focused dependency set.",
+  "automation_domain": "servicenow",
+  "base_image": "quay.io/rockylinux/rockylinux:9",
+  "ansible_core_version": "2.15.13",
+  "ansible_runner_version": "2.4.0",
+  "collections": [
+    {
+      "name": "servicenow.itsm",
+      "version": "2.8.0"
+    }
+  ],
+  "python_dependencies": [
+    "pysnow==0.7.17"
+  ],
+  "system_dependencies": [],
+  "image_tag": "0.1.0",
+  "registry_namespace": "example-platform",
+  "publish_target": "quay.io"
+}

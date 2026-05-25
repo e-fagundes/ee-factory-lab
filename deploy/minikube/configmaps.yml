@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ee-factory-config
+  namespace: ee-factory-lab
+data:
+  DEFAULT_PUBLISH_TARGET: quay.io
+  OLLAMA_ENABLED: "false"
+  VULNERABILITY_SCAN_ENABLED: "true"
+  VULNERABILITY_SCAN_REQUIRED: "false"
+  OSV_API_BASE_URL: https://api.osv.dev

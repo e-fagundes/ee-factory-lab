@@ -1,0 +1,26 @@
+﻿{
+  "ee_name": "ee-ansible-windows",
+  "description": "Purpose-driven execution environment for Windows automation.",
+  "purpose": "Run Windows host automation using pinned Ansible Windows collections and pywinrm.",
+  "automation_domain": "windows",
+  "base_image": "quay.io/rockylinux/rockylinux:9",
+  "ansible_core_version": "2.15.13",
+  "ansible_runner_version": "2.4.0",
+  "collections": [
+    {
+      "name": "ansible.windows",
+      "version": "2.5.0"
+    },
+    {
+      "name": "community.windows",
+      "version": "2.3.0"
+    }
+  ],
+  "python_dependencies": [
+    "pywinrm==0.5.0"
+  ],
+  "system_dependencies": [],
+  "image_tag": "0.1.0",
+  "registry_namespace": "example-platform",
+  "publish_target": "quay.io"
+}
