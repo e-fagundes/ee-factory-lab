@@ -91,6 +91,15 @@ type BaseImagesResponse = {
   allowed_base_images: string[];
 };
 
+type SettingsResponse = {
+  app_env: string;
+  default_publish_target: string;
+  vulnerability_scan_enabled: boolean;
+  vulnerability_scan_required: boolean;
+  ollama_enabled: boolean;
+  ollama_model: string;
+};
+
 type LogResponse = {
   validation_log: string;
   build_log: string;
@@ -142,6 +151,7 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState<SectionId>("dashboard");
   const [form, setForm] = useState<EERequestPayload>(initialForm);
   const [domains, setDomains] = useState<DomainsResponse | null>(null);
+  const [settings, setSettings] = useState<SettingsResponse | null>(null);
   const [baseImages, setBaseImages] = useState<string[]>([]);
   const [requests, setRequests] = useState<EERequestRecord[]>([]);
   const [selectedRequest, setSelectedRequest] = useState<EERequestRecord | null>(null);
@@ -191,6 +201,7 @@ export default function Home() {
 
   useEffect(() => {
     void loadReferenceData();
+    void loadSettings();
     void refreshRequests();
   }, []);
 
@@ -249,6 +260,14 @@ export default function Home() {
       setDomains(domainResponse);
       setBaseImages(baseImageResponse.allowed_base_images);
     });
+  }
+
+  async function loadSettings() {
+    try {
+      setSettings(await apiFetch<SettingsResponse>("/api/v1/settings"));
+    } catch {
+      setSettings(null);
+    }
   }
 
   async function refreshRequests() {
@@ -1105,7 +1124,18 @@ export default function Home() {
               </div>
               <div>
                 <dt>Default publish target</dt>
-                <dd>Quay.io</dd>
+                <dd>{settings?.default_publish_target ?? "Quay.io"}</dd>
+              </div>
+              <div>
+                <dt>Ollama documentation assistant</dt>
+                <dd>{settings?.ollama_enabled ? `Enabled (${settings.ollama_model})` : "Disabled"}</dd>
+              </div>
+              <div>
+                <dt>OSV vulnerability checks</dt>
+                <dd>
+                  {settings?.vulnerability_scan_enabled ? "Enabled" : "Disabled"}
+                  {settings?.vulnerability_scan_required ? " and blocking" : ""}
+                </dd>
               </div>
               <div>
                 <dt>Runtime target</dt>
