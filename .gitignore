@@ -18,3 +18,7 @@ data/metadata/*
 *.log
 *.tar.gz
 deploy/minikube/secrets.local.yml
+
+# Locally generated publication drafts
+docs/medium-article-ee-factory-lab.md
+docs/linkedin-post-ee-factory-lab.md
